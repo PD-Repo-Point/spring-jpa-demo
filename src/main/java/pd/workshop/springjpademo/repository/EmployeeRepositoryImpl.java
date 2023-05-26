@@ -2,6 +2,9 @@ package pd.workshop.springjpademo.repository;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.Query;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Root;
 import jakarta.transaction.Transactional;
 import pd.workshop.springjpademo.entity.Employee;
 
@@ -59,9 +62,11 @@ public class EmployeeRepositoryImpl implements EmployeeRepository{
     }
     // JPQL -> JPA -> Queries
 
+    // Entity name dependent - Runtime Error
     public List<String> getEmployeesByExperience(Integer yOfExp){
         Query jpqlQuery = entityManager.createQuery(
-                "SELECT e.fName FROM Employee as e WHERE e.yearsExperience > :yearsOfExperience ORDER BY e.lName"
+                "SELECT e.fName FROM Employee as e " +
+                        "WHERE e.yearsExperience > :yearsOfExperience ORDER BY e.lName"
         );
         jpqlQuery.setParameter("yearsOfExperience", yOfExp);
         List<String> employeeList = jpqlQuery.getResultList();
@@ -70,14 +75,31 @@ public class EmployeeRepositoryImpl implements EmployeeRepository{
 
     }
 
+    // Database dependent - Runtime Error
     public List<Employee> getEmployeesByExperienceNativeQuery(Integer yOfExp){
         Query nativeQuery = entityManager.createNativeQuery(
-                "SELECT * FROM Employee WHERE yearsExperience > :yearsOfExperience ORDER BY lName", Employee.class
+                "SELECT * FROM Employee " +
+                   "WHERE yearsExperience > :yearsOfExperience " +
+                   "ORDER BY lName", Employee.class
         );
         nativeQuery.setParameter("yearsOfExperience", yOfExp);
         List<Employee> employeeList = nativeQuery.getResultList();
 
         return employeeList;
-
     }
+
+    //CRITERIA QUERY - Compile Error
+    public List<Employee> getEmployeesByExperienceCriteriaQuery(Integer yOfExp) {
+
+        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+        CriteriaQuery<Employee> criteriaQuery = criteriaBuilder.createQuery(Employee.class);
+        Root<Employee> employeeRoot = criteriaQuery.from(Employee.class);
+
+        List<Employee> employeeList = entityManager.createQuery(
+                criteriaQuery.select(employeeRoot)
+                .where(criteriaBuilder.greaterThan(employeeRoot.get("yearsExperience"),yOfExp))).getResultList();
+
+        return employeeList;
+    }
+
 }

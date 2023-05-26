@@ -147,8 +147,11 @@ public class SpringJpaDemoApplication {
 
 		/*employeeRepository.getEmployeesByExperience(10)
 				.stream().forEach(System.out::println);*/
-		employeeRepository.getEmployeesByExperienceNativeQuery(10)
+		/*employeeRepository.getEmployeesByExperienceNativeQuery(10)
+				.stream().forEach(System.out::println);*/
+		employeeRepository.getEmployeesByExperienceCriteriaQuery(10)
 				.stream().forEach(System.out::println);
+
 
 		entityManager.close();
 		entityManagerFactory.close();
