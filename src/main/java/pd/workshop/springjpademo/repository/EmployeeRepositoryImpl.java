@@ -18,10 +18,12 @@ public class EmployeeRepositoryImpl implements EmployeeRepository{
 
     @Override
     public Optional<Employee> save(Employee employee) {
+
         entityManager.getTransaction().begin();
 
         if(employee.getId() == null){
-            System.out.println("It is persisted");
+            if(employee.getEmployeeProfile() !=null)
+                entityManager.persist(employee.getEmployeeProfile());
             entityManager.persist(employee); // only will run insert
         }
         else{
@@ -52,5 +54,6 @@ public class EmployeeRepositoryImpl implements EmployeeRepository{
             entityManager.merge(employee);
         }
         entityManager.getTransaction().commit();
+
     }
 }

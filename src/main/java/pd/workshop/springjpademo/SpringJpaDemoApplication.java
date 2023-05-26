@@ -8,9 +8,13 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import pd.workshop.springjpademo.entity.Company;
 import pd.workshop.springjpademo.entity.Employee;
+import pd.workshop.springjpademo.entity.EmployeeProfile;
 import pd.workshop.springjpademo.entity.Salary;
 import pd.workshop.springjpademo.repository.EmployeeRepository;
 import pd.workshop.springjpademo.repository.EmployeeRepositoryImpl;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @SpringBootApplication
 public class SpringJpaDemoApplication {
@@ -28,7 +32,7 @@ public class SpringJpaDemoApplication {
 				= new EmployeeRepositoryImpl(entityManager);
 
 		// Created the employee details
-		Employee employee = new Employee();
+		/*Employee employee = new Employee();
 		employee.setFName("John");
 		employee.setLName("Doe");
 		employee.setYearsExperience(20);
@@ -59,9 +63,59 @@ public class SpringJpaDemoApplication {
 		System.out.println(employeeRepository.getEmployeeById(1l).get());
 
 		// Deleting the employee - employee1
-		employeeRepository.deleteEmployee(employee2);
+		employeeRepository.deleteEmployee(employee2);*/
+
+
+		// RELATIONSHIP
+		// one-to-one
+		/*Employee employee = new Employee();
+		employee.setFName("John");
+		employee.setLName("Doe");
+		employee.setYearsExperience(20);
+		employee.setSalary(new Salary(54000.00, true));
+		employee.setCompany(new Company("MyCompany"));
+		employee.setEmployeeProfile(
+				new EmployeeProfile(
+						"myusername",
+						"mypassword",
+						"myemail@email.com",
+						employee,
+						"DevOps Engineer"
+				));
+
+		employeeRepository.save(employee);*/
+
+		// one-to-many bidirectional
+		Employee employee = new Employee();
+		employee.setFName("John");
+		employee.setLName("Doe");
+		employee.setYearsExperience(20);
+		employee.setSalaries(generatedSalaries());
+		employee.setCompany(new Company("MyCompany"));
+		employee.setEmployeeProfile(
+				new EmployeeProfile(
+						"myusername",
+						"mypassword",
+						"myemail@email.com",
+						employee,
+						"DevOps Engineer"
+				));
+		employeeRepository.save(employee);
 
 		entityManager.close();
 		entityManagerFactory.close();
+	}
+
+	public static List<Salary> generatedSalaries(){
+		Salary currentSalary = new Salary(34000.00,true);
+		Salary historicalSalary1 = new Salary(30000.00,false);
+		Salary historicalSalary2 = new Salary(25000.00,false);
+
+		List<Salary> salaries = new ArrayList<>();
+		salaries.add(currentSalary);
+		salaries.add(historicalSalary1);
+		salaries.add(historicalSalary2);
+
+		return salaries;
 	}
 }

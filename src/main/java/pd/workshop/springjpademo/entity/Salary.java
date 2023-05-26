@@ -31,6 +31,9 @@ public class Salary implements Serializable {
     @Column
     private String title;
 
+    @ManyToOne(fetch = FetchType.LAZY) // FETCH TYPE - LAZY - EAGER
+    private Employee employee;
+
     public Salary(Double currentSalary, Boolean activeFlag) {
         this.currentSalary = currentSalary;
         this.activeFlag = activeFlag;

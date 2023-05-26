@@ -8,6 +8,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -31,5 +33,12 @@ public class Employee implements Serializable {
     @Column
     private Company company;
 
+    @OneToOne(mappedBy = "employee")
+    private EmployeeProfile employeeProfile;
+
+    @Column
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "employee_id")
+    private List<Salary> salaries = new ArrayList<>();
 
 }
