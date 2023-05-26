@@ -6,6 +6,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -27,7 +29,15 @@ public class Company implements Serializable {
     @Column
     private String country;
 
+    @ManyToMany(mappedBy = "companies")
+    private List<Employee> employees = new ArrayList<>();
+
     public Company(String name) {
         this.name = name;
+    }
+
+    public Company(String name, String country) {
+        this.name = name;
+        this.country = country;
     }
 }

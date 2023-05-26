@@ -15,6 +15,9 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
+//@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+//@Inheritance(strategy = InheritanceType.JOINED)
+@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 public class Employee implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -41,4 +44,19 @@ public class Employee implements Serializable {
     @JoinColumn(name = "employee_id")
     private List<Salary> salaries = new ArrayList<>();
 
+
+    @ManyToMany(cascade = {
+            CascadeType.MERGE,
+            CascadeType.PERSIST
+    })
+    @JoinTable(name="employee_company",
+                joinColumns = @JoinColumn(name = "employee_id"),
+                inverseJoinColumns = @JoinColumn(name = "company_id"))
+    private List<Company> companies = new ArrayList<>();
+
+    public Employee(Long id, String fName, String lName, Integer yearsExperience, Double totalCompensation, List<Salary> salaries, List<Company> companies) {
+    }
+
+    public Employee(Long id, String fName, String lName, Integer yearsExperience, List<Company> companies) {
+    }
 }

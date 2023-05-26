@@ -6,10 +6,7 @@ import jakarta.persistence.Persistence;
 import jakarta.persistence.PersistenceContext;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import pd.workshop.springjpademo.entity.Company;
-import pd.workshop.springjpademo.entity.Employee;
-import pd.workshop.springjpademo.entity.EmployeeProfile;
-import pd.workshop.springjpademo.entity.Salary;
+import pd.workshop.springjpademo.entity.*;
 import pd.workshop.springjpademo.repository.EmployeeRepository;
 import pd.workshop.springjpademo.repository.EmployeeRepositoryImpl;
 
@@ -86,12 +83,28 @@ public class SpringJpaDemoApplication {
 		employeeRepository.save(employee);*/
 
 		// one-to-many bidirectional
-		Employee employee = new Employee();
+		/*Employee employee = new Employee();
 		employee.setFName("John");
 		employee.setLName("Doe");
 		employee.setYearsExperience(20);
 		employee.setSalaries(generatedSalaries());
-		employee.setCompany(new Company("MyCompany"));
+		employee.setEmployeeProfile(
+				new EmployeeProfile(
+						"myusername",
+						"mypassword",
+						"myemail@email.com",
+						employee,
+						"DevOps Engineer"
+				));
+		employeeRepository.save(employee);*/
+
+		// many-to-many relationship
+		ActiveEmployee employee = new ActiveEmployee();
+		employee.setFName("John");
+		employee.setLName("Doe");
+		employee.setYearsExperience(20);
+		employee.setSalaries(generatedSalaries());
+		employee.setCompanies(generatedCompanies());
 		employee.setEmployeeProfile(
 				new EmployeeProfile(
 						"myusername",
@@ -101,6 +114,7 @@ public class SpringJpaDemoApplication {
 						"DevOps Engineer"
 				));
 		employeeRepository.save(employee);
+
 
 		entityManager.close();
 		entityManagerFactory.close();
@@ -117,5 +131,16 @@ public class SpringJpaDemoApplication {
 		salaries.add(historicalSalary2);
 
 		return salaries;
+	}
+
+	public static List<Company> generatedCompanies(){
+		Company company1 = new Company("Google", "USA");
+		Company company2 = new Company("Amazon", "USA");
+
+		List<Company> companies = new ArrayList<>();
+		companies.add(company1);
+		companies.add(company2);
+
+		return companies;
 	}
 }
