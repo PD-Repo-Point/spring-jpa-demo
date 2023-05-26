@@ -99,7 +99,7 @@ public class SpringJpaDemoApplication {
 		employeeRepository.save(employee);*/
 
 		// many-to-many relationship
-		ActiveEmployee employee = new ActiveEmployee();
+		/*ActiveEmployee employee = new ActiveEmployee();
 		employee.setFName("John");
 		employee.setLName("Doe");
 		employee.setYearsExperience(20);
@@ -113,8 +113,42 @@ public class SpringJpaDemoApplication {
 						employee,
 						"DevOps Engineer"
 				));
-		employeeRepository.save(employee);
+		employeeRepository.save(employee);*/
 
+		// ---- JPQL ----
+		// Created the employee details
+		Employee employee = new Employee();
+		employee.setFName("John");
+		employee.setLName("Doe");
+		employee.setYearsExperience(20);
+		employee.setSalary(new Salary(54000.00, true));
+		employee.setCompany(new Company("MyCompany"));
+
+		// Created the employee1 details
+		Employee employee1 = new Employee();
+		employee1.setFName("Ananya");
+		employee1.setLName("Chatterjee");
+		employee1.setYearsExperience(10);
+		employee1.setSalary(new Salary(40000.00, true));
+		employee1.setCompany(new Company("MyCompany"));
+
+		// Created the employee2 details
+		Employee employee2 = new Employee();
+		employee2.setFName("Akansha");
+		employee2.setLName("Chatterjee");
+		employee2.setYearsExperience(13);
+		employee2.setSalary(new Salary(54000.00, true));
+		employee2.setCompany(new Company("MyCompany"));
+
+		// Saving the Data
+		employeeRepository.save(employee);
+		employeeRepository.save(employee1);
+		employeeRepository.save(employee2);
+
+		/*employeeRepository.getEmployeesByExperience(10)
+				.stream().forEach(System.out::println);*/
+		employeeRepository.getEmployeesByExperienceNativeQuery(10)
+				.stream().forEach(System.out::println);
 
 		entityManager.close();
 		entityManagerFactory.close();
